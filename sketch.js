@@ -5,13 +5,16 @@ const Constraint = Matter.Constraint;
 
 var engine, world;
 var box1, pig1,pig3;
-var backgroundImg,platform;
+var backgroundImg,platform,bgImg2,bgImg1;
 var bird, slingshot;
 
 var gameState = "onSling";
 
 function preload() {
-    backgroundImg = loadImage("sprites/bg.png");
+    bgImg1 = loadImage("sprites/bg.png");
+    bgImg2 = loadImage("sprites/bg2.jpg");
+
+    getImage();
 }
 
 function setup(){
@@ -40,12 +43,16 @@ function setup(){
 
     bird = new Bird(200,50);
 
+    
+
     //log6 = new Log(230,180,80, PI/2);
     slingshot = new SlingShot(bird.body,{x:200, y:50});
 }
 
 function draw(){
+    if(backgroundImg){
     background(backgroundImg);
+    }
     Engine.update(engine);
     //strokeWeight(4);
     box1.display();
@@ -67,6 +74,8 @@ function draw(){
     platform.display();
     //log6.display();
     slingshot.display();    
+
+    
 }
 
 function mouseDragged(){
@@ -85,4 +94,17 @@ function keyPressed(){
     if(keyCode === 32){
        // slingshot.attach(bird.body);
     }
+}
+
+async function getImage(){
+var response = await fetch("http://worldclockapi.com/api/json/est/now");
+var responseJSON= await response.json();
+var datetime = responseJSON.currentDateTime;
+var hour = datetime.slice(11,13);
+console.log(hour);
+if(hour >= 06 && hour <= 19){
+    backgroundImg = bgImg1;
+} else {
+    backgroundImg = bgImg2;
+}
 }
